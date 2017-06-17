@@ -1,5 +1,7 @@
 from __future__ import print_function
 from mailmerge import MailMerge
+from os import path
+from datetime import datetime
 
 
 class Generator(object):
@@ -13,70 +15,13 @@ class Generator(object):
     def get_template_fields(self):
         return self.document.get_merge_fields()
 
-    def marge_pages_to_file(self, data, output_file_name):
+    def merge_pages_to_file(self, data, filename):
         self.document.merge_pages(data)
-        path = self.temp_files_folder_name + "/" + output_file_name
-        self.document.write(path)
+        file_path = self.temp_files_folder_name + "/" + filename
+        self.document.write(file_path)
+        return file_path
 
-    sample_data = [
-        {
-            'MiastoWydania': 'Warszawa',
-            'NrZRejestru': 'KW001/213/2017',
-            'TerminOd': '16.08.2017',
-            'ImieNazwisko': 'Jan Kowalski',
-            'NrZgody': 'ASDASDASDdf.dfsdfsdf',
-            'DataUr': '16.08.1990',
-            'DataZgody': '01.01.2017',
-            'TerminDo': '18.08.2017',
-            'DataWydania': '18.08.2017',
-            'WydajacyZgode': 'Mazowiecki KO'
-        },
-        {
-            'MiastoWydania': 'Warszawa',
-            'NrZRejestru': 'KW001/213/2017',
-            'TerminOd': '16.08.2017',
-            'ImieNazwisko': 'Marek Kowalski',
-            'NrZgody': 'ASDASDASDdf.dfsdfsdf',
-            'DataUr': '16.08.1990',
-            'DataZgody': '01.01.2017',
-            'TerminDo': '18.08.2017',
-            'DataWydania': '18.08.2017',
-            'WydajacyZgode': 'Mazowiecki KO'
-        },
-        {
-            'MiastoWydania': 'Warszawa',
-            'NrZRejestru': 'KW001/213/2017',
-            'TerminOd': '16.08.2017',
-            'ImieNazwisko': 'John malkovic',
-            'NrZgody': 'ASDASDASDdf.dfsdfsdf',
-            'DataUr': '16.08.1990',
-            'DataZgody': '01.01.2017',
-            'TerminDo': '18.08.2017',
-            'DataWydania': '18.08.2017',
-            'WydajacyZgode': 'Mazowiecki KO'
-        },
-        {
-            'MiastoWydania': 'Warszawa',
-            'NrZRejestru': 'KW001/213/2017',
-            'TerminOd': '16.08.2017',
-            'ImieNazwisko': 'Marek Mostowiak',
-            'NrZgody': 'ASDASDASDdf.dfsdfsdf',
-            'DataUr': '16.08.1990',
-            'DataZgody': '01.01.2017',
-            'TerminDo': '18.08.2017',
-            'DataWydania': '18.08.2017',
-            'WydajacyZgode': 'Mazowiecki KO'
-        },
-        {
-            'MiastoWydania': 'Warszawa',
-            'NrZRejestru': 'KW001/213/2017',
-            'TerminOd': '16.08.2017',
-            'ImieNazwisko': 'Hanna Mostowiak',
-            'NrZgody': 'ASDASDASDdf.dfsdfsdf',
-            'DataUr': '16.08.1990',
-            'DataZgody': '01.01.2017',
-            'TerminDo': '18.08.2017',
-            'DataWydania': '18.08.2017',
-            'WydajacyZgode': 'Mazowiecki KO'
-        }
-    ]
+    def get_docx_file(self, data):
+        filename = datetime.now() + '.docx'
+        file_path = self.merge_pages_to_file(data, filename)
+        return file_path
