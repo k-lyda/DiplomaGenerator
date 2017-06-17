@@ -20,7 +20,7 @@ def get_templates():
     return jsonify({'templates': templates})
 
 
-@app.route('/generator/v1.0/diploma', methods=['GET', 'POST'])
+@app.route('/generator/v1.0/diploma', methods=['POST'])
 def generate_diplomas():
     # if there is no json at all or not all mandatory data are posted
     required_fields = ['template', 'data']
@@ -43,7 +43,6 @@ def generate_diplomas():
         split_path = os.path.split(file_path)
         return send_from_directory(directory=split_path[0], filename=split_path[1],
                                    as_attachment=True, attachment_filename=user_filename)
-
 
 @app.errorhandler(404)
 def not_found(error):
