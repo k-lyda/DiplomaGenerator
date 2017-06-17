@@ -5,6 +5,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return "Hello, World!"
@@ -21,12 +22,27 @@ def get_templates():
 
 @app.route('/generator/v1.0/diploma', methods=['GET', 'POST'])
 def generate_diplomas():
-    filename = datetime.now().strftime("%Y-%m-%d") + "_certyfikaty.docx"
-    generator = Generator("cert_kurs_template.docx")
-    # TODO get data from json request
-    generator.marge_pages_to_file(Generator.sample_data, filename)
-    return send_from_directory(directory=Generator.temp_files_folder_name, filename=filename,
-                               as_attachment=True, attachment_filename=filename)
+    # if there is no json at all or not all mandatory data are posted
+    required_fields = ['template', 'data']
+    if not request.json or \
+            not all(field in request.json for field in required_fields):
+        return make_response("Wrong request data", 400)
+    else:
+        if 'output_file_type' not in request.json:
+            output_file_type = 'docx'
+        else:
+            output_file_type = request.json['output_file_type']
+
+        user_filename = datetime.now().strftime("%Y-%m-%d") + "_certyfikaty.docx"
+        generator = Generator(request.json['template'])
+        if output_file_type == 'docx':
+            file_path=generator.get_docx_file(request.json['data'])
+        else:
+            return make_response("Unsupported output type", 400)
+
+        split_path = os.path.split(file_path)
+        return send_from_directory(directory=split_path[0], filename=split_path[1],
+                                   as_attachment=True, attachment_filename=user_filename)
 
 
 @app.errorhandler(404)
