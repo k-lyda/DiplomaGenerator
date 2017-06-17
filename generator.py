@@ -22,6 +22,6 @@ class Generator(object):
         return file_path
 
     def get_docx_file(self, data):
-        filename = datetime.now() + '.docx'
+        filename = str(datetime.now()) + '.docx'
         file_path = self.merge_pages_to_file(data, filename)
         return file_path
